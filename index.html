@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBmnATbcsItV07AIzYhG-6E0ZYgZgTkh3w">
+    </script>
+    <style>
+        body {
+            position: relative;
+        }
+        
+        .Btn {
+            margin-top: 600px;
+            margin-left: 250px;
+            position: absolute;
+        }
+        
+        #map {
+            width: 800px;
+            height: 560px;
+            border: 1px black solid;
+            position: absolute;
+            display: none;
+        }
+        
+        #dis {
+            width: 800px;
+            height: 560px;
+            border: 1px black solid;
+            position: absolute;
+            display: none;
+        }
+        
+        #table {
+            border: orangered;
+            border-style: groove;
+            font-size: 30px;
+            width: 100%;
+            height: 100%;
+            position: static;
+            text-align: center;
+        }
+        
+        button {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"> </div>
+    <div id="dis">
+        <table id="table" border="3px">
+            <tr>
+                <th>longitude</th>
+                <td id="long"></td>
+            </tr>
+            <tr>
+                <th>latitude</th>
+                <td id="lat"></td>
+            </tr>
+            <tr>
+                <th>accuracy</th>
+                <td id="acc"></td>
+            </tr>
+            <th>time</th>
+            <td id="tim"></td>
+            </tr>
+
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="Btn">
+        <button id="Display">Display Map</button>
+        <button id="Info">Display Info</button>
+    </div>
+    <script>
+        var map = document.querySelector('#map');
+        var Display = document.querySelector('#Display');
+        var Info = document.querySelector('#Info');
+        var tabledata = document.querySelector('#table');
+
+
+        Display.addEventListener('click', function() {
+            document.getElementById("dis").style.display = "none";
+
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sucess, error);
+            } else {
+                map.innerText = "your browser doesn't support geolocation";
+            }
+        })
+
+        function sucess(position) {
+            document.getElementById("map").style.display = "block";
+
+            // map.innerText = position.coords.longitude+" , "+position.coords.latitude
+            var gMap = new google.maps.Map(map, {
+                center: {
+                    lng: position.coords.longitude,
+                    lat: position.coords.latitude
+                },
+                zoom: 18,
+
+            })
+            var marker = new google.maps.Marker({
+                position: {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                },
+                map: gMap,
+                title: 'your Location',
+                icon: '',
+                draggable: true,
+
+
+            });
+        }
+
+        function error(erroObj) {
+            var message = ""
+            switch (erroObj.code) {
+                case 1:
+                    {
+                        message = "allow me to get your location"
+                    }
+                    break;
+                case 2:
+                    {
+                        message = "unable to get location"
+                    }
+                    break;
+                case 3:
+                    {
+                        message = "check your connection and try again"
+                    }
+                    break;
+                default:
+                    {
+                        message = "unkown error, try again."
+                    }
+            }
+            alert(message);
+        }
+        Info.addEventListener('click', function() {
+            document.getElementById("map").style.display = "none";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(suc, err);
+            } else {
+                map.innerText = "your browser doesn't support geolocation";
+            }
+        })
+
+        function suc(position) {
+            document.getElementById("dis").style.display = "block";
+            var a = document.querySelector("#long");
+            var b = document.querySelector("#lat");
+            var c = document.querySelector("#acc");
+            var d = document.querySelector("#tim");
+
+            a.innerText = position.coords.longitude;
+            b.innerText = position.coords.latitude;
+            c.innerText = position.coords.accuracy;
+            d.innerText = Date(position.timestamp)
+
+
+
+
+        }
+
+        function err(erroObj) {
+            var message = ""
+            document.getElementById("dis").style.display = "none";
+
+
+            switch (erroObj.code) {
+                case 1:
+                    {
+                        message = "allow me to get your location"
+                    }
+                    break;
+                case 2:
+                    {
+                        message = "unable to get location"
+                    }
+                    break;
+                case 3:
+                    {
+                        message = "check your connection and try again"
+                    }
+                    break;
+                default:
+                    {
+                        message = "unkown error, try again."
+                    }
+            }
+            alert(message);
+
+        }
+    </script>
+
+</body>
+
+</html>
